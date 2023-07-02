@@ -61,6 +61,8 @@ class LazyDatabase extends EventEmitter implements DatabaseInterface
 
         $this->promise = $promise = $this->factory->open($this->filename, $this->flags);
         $promise->then(function (DatabaseInterface $db) {
+            // Let listeners know we actually opened a connection
+            $this->emit('open');
             // connection completed => remember only until closed
             $db->on('close', function () {
                 $this->promise = null;
